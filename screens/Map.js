@@ -1,7 +1,14 @@
 import { View, StyleSheet } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
+import {useState} from 'react';
 
 export default function Map(props) {
+    const [markers, setMarkers] = useState([])
+
+    const addMarker = (event) => {
+        const {latitude, longitude} = event.nativeEvent.coordinate;
+        setMarkers([...markers, {latitude,longitude}])
+    }
     return (
         <View style={styles.container}>
             <MapView 
@@ -13,13 +20,11 @@ export default function Map(props) {
                     longitudeDelta: 0.0421,
                 }}
                 mapType={props.mapType}
+                onPress={addMarker}
             >
-                <Marker 
-                    coordinate={{
-                        latitude: props.location.latitude,
-                        longitude: props.location.longitude
-                    }}
-                />
+                {markers.map((marker, index) => (
+                    <Marker key={index} coordinate={marker} />
+                ))}
             </MapView>
         </View>
     );
